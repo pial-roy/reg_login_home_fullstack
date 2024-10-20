@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  mongodb_container:
+    image: mongo:4.4.13
+    container_name: mongodb
+    user: "0:0"
+    restart: always
+    privileged: true
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./db/mongodb:/data/db
+
+  backend:
+    build:
+      context: ./backend
+    restart: always
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongodb_container
+
+  frontend:
+    build:
+      context: ./frontend
+    restart: always
+    ports:
+      - "3000:3000"
